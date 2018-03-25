@@ -24,14 +24,14 @@ app.get('/increment', (req, res) => {
     value = value + 1;
     sendMessage("[Value] Modified");
 
-    res.status(200).send("Ok");
+    res.status(200).json({});
 });
 
 app.get('/decrement', (req, res) => {
     value = value -1;
     sendMessage("[Value] Modified");
 
-    res.status(200).send("Ok");
+    res.status(200).json({});
 });
 
 app.get('/stream', (req, res) => {
