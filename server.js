@@ -12,27 +12,13 @@ app.all('*', (req, res, next) => {
 });
 
 // register the stream subscriber endpoint
-app.get('/stream', sse.endpoint);
+app.use('/stream', sse.endpoint);
 // give all endpoints a way to send message through
 app.use(sse.streamMessage);
 
 app.get('/', (req, res) => res.send("Value Server"));
 
 app.use('/value', value);
-
-app.get('/increment', (req, res) => {
-    value = value + 1;
-    sse.sendMessage("[Value] Modified");
-
-    res.status(200).json({});
-});
-
-app.get('/decrement', (req, res) => {
-    value = value -1;
-    sse.sendMessage("[Value] Modified");
-
-    res.status(200).json({});
-});
 
 app.listen(port, () => console.log(`Value App listening on port ${port}`));
 

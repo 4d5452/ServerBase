@@ -53,7 +53,7 @@ function errorConnection(id) {
     connections.delete(id);
 }
 
-function streamessage(req, res, next) {
+function streamMessage(req, res, next) {
     res.sendStreamMessage = function(message) {
         connections.forEach((connection) => {
             connection.sseMessage(message);
