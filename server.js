@@ -13,9 +13,8 @@ app.all('*', (req, res, next) => {
 
 // register the stream subscriber endpoint
 app.get('/stream', sse.endpoint);
-// give all endpoints a way to send stream event
+// give all endpoints a way to send message through
 app.use(sse.streamMessage);
-app.get('/stream/connections', sse.totalConnections);
 
 app.get('/', (req, res) => res.send("Value Server"));
 
