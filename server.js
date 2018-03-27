@@ -1,9 +1,9 @@
 const express = require('express');
 const app = express();
 const sse = require('./sse/sse');
+const value = require('./value/value');
 
 const port = 50001;
-var value = 0;
 
 app.all('*', (req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -11,12 +11,15 @@ app.all('*', (req, res, next) => {
     next();
 });
 
+// register the stream subscriber endpoint
 app.get('/stream', sse.endpoint);
+// give all endpoints a way to send stream event
+app.use(sse.streamMessage);
 app.get('/stream/connections', sse.totalConnections);
 
 app.get('/', (req, res) => res.send("Value Server"));
 
-app.get('/value', (req, res) => res.json({value: value}));
+app.use('/value', value);
 
 app.get('/increment', (req, res) => {
     value = value + 1;
