@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const sse = require('./sse/sse.router');
+const sse = require('./sse/sse');
 
 const port = 50001;
 var value = 0;
