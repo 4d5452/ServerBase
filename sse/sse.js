@@ -1,3 +1,5 @@
+const router = require('express').Router();
+
 const SSE_HEADER = {
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
@@ -7,23 +9,27 @@ const SSE_HEADER = {
 var connections = new Map();
 var id = 0;
 
+router.get('/', endpoint);
+router.get('/connections', totalConnections);
+
 module.exports = {
-    endpoint: endpoint,
-    totalConnections: totalConnections,
-    sendMessage: sendMessage
+    endpoint: router,
+    streamMessage: streamMessage
 }
 
 /************Functions */
 
 function endpoint(req, res) {
     res.writeHead(200, SSE_HEADER);
+
+    res.sseMessage = function(data) {
+        res.write(`data: ${data}\n\n`);
+    }
+
     res.write("event: open\n\n");
 
     res.id = `${++id}-${req.ip}`;
 
-    res.sseSend = function(data) {
-        res.write(`data: ${data}\n\n`);
-    }
     addConnection(res.id, res);
 
     res.on('close', () => closeConnection(res.id));
@@ -47,8 +53,11 @@ function errorConnection(id) {
     connections.delete(id);
 }
 
-function sendMessage(message) {
-    connections.forEach((connection) => {
-        connection.sseSend(message);
-    });
+function streamessage(req, res, next) {
+    res.sendStreamMessage = function(message) {
+        connections.forEach((connection) => {
+            connection.sseMessage(message);
+        });
+    }
+    next();
 }
