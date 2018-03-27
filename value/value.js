@@ -12,7 +12,7 @@ router.get('/increment', function(req, res) {
 });
 
 router.get('/decrement', function(req, res) {
-    value = value -1;
+    value = value - 1;
     res.sendStreamMessage("[Value] Modified");
 
     res.status(200).json({});
